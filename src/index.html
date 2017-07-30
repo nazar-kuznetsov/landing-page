@@ -20,8 +20,42 @@
 
   <div class="wrapper">
     
-    <button class="button slider-next">next</button>
-    <button class="button">prev</button>
+    <div class="container">
+      <div class="slider">
+        <ul class="slider__list">
+          <li class="slider__item slide1 active">
+            <div class="slider__inner">
+              <p>slider1</p>
+            </div>
+          </li>
+          <li class="slider__item slide2">
+            <div class="slider__inner">
+              <p>slider2</p>
+            </div>
+          </li>
+          <li class="slider__item slide3">
+            <div class="slider__inner">
+              <p>slider3</p>
+            </div>
+          </li>
+          <li class="slider__item slide4">
+            <div class="slider__inner">
+              <p>slider4</p>
+            </div>
+          </li>
+          <li class="slider__item slide5">
+            <div class="slider__inner">
+              <p>slider5</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="slider_control">
+        <button class="slider__button" data-slider-button="prev">prev</button>
+        <button class="slider__button" data-slider-button="next">next</button>
+      </div>
+    </div>
+  
   </div>
   <!--Footer-->
   //= template/footer.html
