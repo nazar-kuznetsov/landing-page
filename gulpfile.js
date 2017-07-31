@@ -73,30 +73,21 @@ gulp.task('js:build', function () {
         }))
         //.pipe(uglify()) //Сожмем наш js
         .on('error', notify.onError ())
-        // .pipe(sourcemaps.write()) //Пропишем карты
+        .pipe(sourcemaps.write()) //Пропишем карты
         .pipe(gulp.dest(path.build.js)) //Выплюнем готовый файл в build
         .pipe(reload({stream: true})); //И перезагрузим сервер
 });
 
 
-// gulp.task('babel', function () {
-//     return gulp.src(path.src.js)
-//         .pipe(babel({
-//             presets: ['es2015']
-//         }))
-//         .pipe(gulp.dest('dist'));
-// });
-
-
 gulp.task('style:build', function () {
     gulp.src(path.src.style) //Выберем наш main.scss
-        //.pipe(sourcemaps.init()) //То же самое что и с js
+        .pipe(sourcemaps.init()) //То же самое что и с js
         .pipe(sass()) //Скомпилируем
         .on('error', notify.onError ())
         //.pipe(prefixer()) //Добавим вендорные префиксы
         .pipe(gcmq()) // media
         //.pipe(cssmin()) //Сожмем
-        // .pipe(sourcemaps.write())
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest(path.build.css)) //И в build
         .pipe(reload({stream: true}));
 });
