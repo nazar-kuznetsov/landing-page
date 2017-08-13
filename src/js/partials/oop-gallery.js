@@ -12,14 +12,16 @@ function Slider(settings) {
 
   this.count = 0;
   this.countDots = 0;
+
+  this.scrollStyle = settings.scrollStyle;
   
   if (settings.dots !== undefined) {
     this.dots = document.querySelectorAll(settings.dots);
     this.galleryDots.call(this);
   }
   
-  if (settings.scrollStyle === 'gallery') { this.gallery(); } 
-  if (settings.scrollStyle === 'carousel') { this.carousel(); }
+  if (this.scrollStyle === 'gallery') { this.gallery(); } 
+  if (this.scrollStyle === 'carousel') { this.carousel(); }
 
 }
 
@@ -58,6 +60,7 @@ Slider.prototype.nextGallery = function () {
   }
 
   this.selector[this.count].classList.remove('active');
+
   this.count++;
 
   if (this.count >= this.selector.length) {
@@ -86,11 +89,11 @@ Slider.prototype.prevGallery = function () {
 
 
 Slider.prototype.nextCarousel = function () {
+  this.count = this.countDots;
 
   if (this.dots !== undefined) {
     this.dotsNext.call(this, this.len);
   }
-
 
   this.count++;
 
@@ -103,6 +106,7 @@ Slider.prototype.nextCarousel = function () {
 
 
 Slider.prototype.prevCarousel = function () {
+  this.count = this.countDots;
 
   if (this.dots !== undefined) {
     this.dotsPrev.call(this, this.len);
@@ -128,20 +132,34 @@ Slider.prototype.galleryDots = function () {
 Slider.prototype.getDotsNumber = function (e) {
   this.dotsNumbers = e.target.getAttribute('data-gallery-dots');
   this.countDots = +this.dotsNumbers;
-  this.changeSlide();
+
+  if (this.scrollStyle === 'gallery') { this.changeSlide(); } 
+  if (this.scrollStyle === 'carousel') { this.carouselDots(); }
+  
 }; 
 
 
 Slider.prototype.changeSlide = function () {
   this.count = this.countDots;
+
     
   for ( let i = 0; i < this.selector.length; i++ ) {
     this.selector[i].classList.remove('active');
     this.dots[i].classList.remove('active');
   }
-  
   this.selector[this.count].classList.add('active');
   this.dots[this.count].classList.add('active');
+};
+
+
+Slider.prototype.carouselDots = function () {
+  
+  for ( let i = 0; i < this.dots.length; i++ ) {
+    this.dots[i].classList.remove('active');
+  }
+  
+  this.selector.style.transform = "translateX(-" + this.countDots + "00%)";
+  this.dots[this.countDots].classList.add('active');
 };
 
 
@@ -199,7 +217,6 @@ let caruselTest = new Slider ({
 /*
  
 
-1.Доделать Dots
 3.Подумать где писать стили css
 4. Попробувать сделать свайпинг
 5.Авторотация всегда должна останавливаться при наведении курсора (42% так не делают)
