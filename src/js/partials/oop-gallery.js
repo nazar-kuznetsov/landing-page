@@ -89,13 +89,13 @@ Slider.prototype.prevGallery = function () {
 
 
 Slider.prototype.nextCarousel = function () {
-  this.count = this.countDots;
 
   if (this.dots !== undefined) {
     this.dotsNext.call(this, this.len);
   }
-
+  
   this.count++;
+  console.log(this.count);
 
   if (this.count >= this.len) {
     this.count = 0;
@@ -106,7 +106,7 @@ Slider.prototype.nextCarousel = function () {
 
 
 Slider.prototype.prevCarousel = function () {
-  this.count = this.countDots;
+
 
   if (this.dots !== undefined) {
     this.dotsPrev.call(this, this.len);
@@ -153,7 +153,8 @@ Slider.prototype.changeSlide = function () {
 
 
 Slider.prototype.carouselDots = function () {
-  
+  this.count = this.countDots;
+
   for ( let i = 0; i < this.dots.length; i++ ) {
     this.dots[i].classList.remove('active');
   }
@@ -196,7 +197,6 @@ let galleryTeam = new Slider ({
   prev: ".gallery__control [data-gallery=prev]",
   next: ".gallery__control [data-gallery=next]",
   children: ".gallery__item",
-  dots: ".carusel__dots span",
   scrollStyle: "gallery"
 });
 
