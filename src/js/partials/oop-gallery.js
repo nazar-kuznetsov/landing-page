@@ -8,6 +8,7 @@ function Slider(settings) {
 
   this.autoScroll = settings.auto || false;
   this.autoScrollTime = settings.time || 7000;
+  this.len = this.selector.length || this.selector.children.length;
 
   this.count = 0;
   this.countDots = 0;
@@ -40,7 +41,6 @@ Slider.prototype.carousel = function () {
   this.btnNext.addEventListener("click", this.nextCarousel.bind(this));
   this.btnPrev.addEventListener("click", this.prevCarousel.bind(this));
 
-
   // Автоматическое перелистывание
   if (this.autoScroll) {
     setInterval( () => {
@@ -53,26 +53,25 @@ Slider.prototype.carousel = function () {
 
 Slider.prototype.nextGallery = function () {
 
-    if (this.dots !== undefined) {
-      this.dotsNext.call(this);
-    }
+  if (this.dots !== undefined) {
+    this.dotsNext.call(this, this.selector.length);
+  }
+
+  this.selector[this.count].classList.remove('active');
+  this.count++;
+
+  if (this.count >= this.selector.length) {
+      this.count = 0;
+  }
+
+  this.selector[this.count].classList.add('active');
+};
   
-    this.selector[this.count].classList.remove('active');
-    this.count++;
-  
-    if (this.count >= this.selector.length) {
-        this.count = 0;
-    }
-  
-    this.selector[this.count].classList.add('active');
-  
-  };
-  
-  // // Преведущий слайд
+// Преведущий слайд
 Slider.prototype.prevGallery = function () {
   
   if (this.dots !== undefined) {
-    this.dotsPrev.call(this);
+    this.dotsPrev.call(this, this.selector.length);
   }
 
   this.selector[this.count].classList.remove('active');
@@ -86,32 +85,40 @@ Slider.prototype.prevGallery = function () {
 };
 
 
-
 Slider.prototype.nextCarousel = function () {
+
+  if (this.dots !== undefined) {
+    this.dotsNext.call(this, this.len);
+  }
+
+
   this.count++;
 
-  if (this.count >= this.selector.children.length) {
+  if (this.count >= this.len) {
     this.count = 0;
   }
 
   this.selector.style.transform = "translateX(-" + this.count + "00%)";
 };
-  
-  
+
+
 Slider.prototype.prevCarousel = function () {
+
+  if (this.dots !== undefined) {
+    this.dotsPrev.call(this, this.len);
+  }
+
   this.count--;
 
   if (this.count < 0) {
-    this.count = this.selector.children.length - 1;
+    this.count = this.len - 1;
   }
 
   this.selector.style.transform = "translateX(-" + this.count + "00%)";
 };
 
 
-
 Slider.prototype.galleryDots = function () {
-
   for ( let i = 0; i < this.dots.length; i++ ) {
     this.dots[i].addEventListener('click', this.getDotsNumber.bind(this));
   }
@@ -138,11 +145,12 @@ Slider.prototype.changeSlide = function () {
 };
 
 
-Slider.prototype.dotsNext = function () {
+Slider.prototype.dotsNext = function (len) {
+
   this.dots[this.countDots].classList.remove('active');
   this.countDots++;
 
-  if (this.countDots >= this.selector.length) {
+  if (this.countDots >= len) {
       this.countDots = 0;
   }
 
@@ -150,12 +158,12 @@ Slider.prototype.dotsNext = function () {
 };
 
 
-Slider.prototype.dotsPrev = function () {
+Slider.prototype.dotsPrev = function (len) {
   this.dots[this.countDots].classList.remove('active');
   this.countDots--;
 
   if (this.countDots < 0) {
-    this.countDots = this.selector.length - 1;
+    this.countDots = len - 1;
   }
 
   this.dots[this.countDots].classList.add('active');
@@ -170,6 +178,7 @@ let galleryTeam = new Slider ({
   prev: ".gallery__control [data-gallery=prev]",
   next: ".gallery__control [data-gallery=next]",
   children: ".gallery__item",
+  dots: ".carusel__dots span",
   scrollStyle: "gallery"
 });
 
@@ -181,6 +190,7 @@ let caruselTest = new Slider ({
   prev: ".carusel__control [data-carusel=prev]",
   next: ".carusel__control [data-carusel=next]",
   parent: ".carusel__list",
+  dots: ".car__dots span",
   scrollStyle: "carousel"
 });
 
