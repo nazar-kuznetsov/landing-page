@@ -13,6 +13,7 @@ function Slider(settings) {
   this.count = 0;
   this.countDots = 0;
 
+  this.stop = document.querySelector(settings.stop);
   this.scrollStyle = settings.scrollStyle;
   
   if (settings.dots !== undefined) {
@@ -32,9 +33,11 @@ Slider.prototype.gallery = function () {
 
   // Автоматическое перелистывание
   if (this.autoScroll) {
-    setInterval( () => {
-      this.nextGallery();
+    this.timerId = setInterval( () => {
+       this.nextGallery();
     }, this.autoScrollTime);
+
+    this.stopTimer.call(this, this.timerId);
   }
 };
 
@@ -45,9 +48,11 @@ Slider.prototype.carousel = function () {
 
   // Автоматическое перелистывание
   if (this.autoScroll) {
-    setInterval( () => {
-      this.nextCarousel();
+    this.timerId = setInterval( () => {
+       this.nextCarousel();
     }, this.autoScrollTime);
+
+    this.stopTimer.call(this, this.timerId);
   }
 
 };
@@ -95,7 +100,6 @@ Slider.prototype.nextCarousel = function () {
   }
   
   this.count++;
-  console.log(this.count);
 
   if (this.count >= this.len) {
     this.count = 0;
@@ -106,7 +110,6 @@ Slider.prototype.nextCarousel = function () {
 
 
 Slider.prototype.prevCarousel = function () {
-
 
   if (this.dots !== undefined) {
     this.dotsPrev.call(this, this.len);
@@ -119,6 +122,25 @@ Slider.prototype.prevCarousel = function () {
   }
 
   this.selector.style.transform = "translateX(-" + this.count + "00%)";
+};
+
+
+Slider.prototype.stopTimer = function (timerId) {
+
+  this.stop.addEventListener('click', clearTimer);
+  this.btnNext.addEventListener('click', clearTimer);
+  this.btnPrev.addEventListener('click', clearTimer);
+
+
+  if (this.dots !== undefined) {
+    for ( let i = 0; i < this.dots.length; i++ ) {
+      this.dots[i].addEventListener('click', clearTimer);
+    }
+  }
+
+  function clearTimer() {
+    clearInterval(timerId);
+  }
 };
 
 
@@ -141,8 +163,7 @@ Slider.prototype.getDotsNumber = function (e) {
 
 Slider.prototype.changeSlide = function () {
   this.count = this.countDots;
-
-    
+ 
   for ( let i = 0; i < this.selector.length; i++ ) {
     this.selector[i].classList.remove('active');
     this.dots[i].classList.remove('active');
@@ -165,7 +186,6 @@ Slider.prototype.carouselDots = function () {
 
 
 Slider.prototype.dotsNext = function (len) {
-
   this.dots[this.countDots].classList.remove('active');
   this.countDots++;
 
@@ -191,12 +211,14 @@ Slider.prototype.dotsPrev = function (len) {
 
 
 
-
 // Галерея Opacity
-let galleryTeam = new Slider ({
+new Slider ({
   prev: ".gallery__control [data-gallery=prev]",
   next: ".gallery__control [data-gallery=next]",
   children: ".gallery__item",
+  dots: ".carusel__dots span",
+  stop: ".stop1",
+  auto: true,
   scrollStyle: "gallery"
 });
 
@@ -204,13 +226,30 @@ let galleryTeam = new Slider ({
 
 
 // Carusel
-let caruselTest = new Slider ({
+new Slider ({
   prev: ".carusel__control [data-carusel=prev]",
   next: ".carusel__control [data-carusel=next]",
   parent: ".carusel__list",
   dots: ".car__dots span",
+  stop: ".stop2",
   scrollStyle: "carousel"
 });
+
+
+
+
+new Slider ({
+  prev: ".numberPrev",
+  next: ".numberNext",
+  children: ".timerNumbers span",
+  stop: ".timerNumbers",
+  auto: true,
+  scrollStyle: "gallery"
+});
+
+
+
+
 
 
 
@@ -219,8 +258,8 @@ let caruselTest = new Slider ({
 
 3.Подумать где писать стили css
 4. Попробувать сделать свайпинг
+
 5.Авторотация всегда должна останавливаться при наведении курсора (42% так не делают)
-6.Авторотация должна полностью прекратиться после активного взаимодействия с пользователем
 
 
 
